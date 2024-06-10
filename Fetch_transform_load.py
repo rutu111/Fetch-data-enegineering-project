@@ -12,6 +12,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 import base64
 
+
 # In[131]:
 
 # Configuration for crytography
@@ -28,10 +29,6 @@ def pad(data):
     padded_data = padder.update(data) + padder.finalize()
     return padded_data
 
-def unpad(data):
-    unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
-    unpadded_data = unpadder.update(data) + unpadder.finalize()
-    return unpadded_data
 
 def encrypt_value(value):
     backend = default_backend()
@@ -41,13 +38,6 @@ def encrypt_value(value):
     encrypted = encryptor.update(padded_value) + encryptor.finalize()
     return base64.b64encode(encrypted).decode()
 
-def decrypt_value(encrypted_value):
-    backend = default_backend()
-    cipher = Cipher(algorithms.AES(AES_KEY), modes.ECB(), backend=backend)
-    decryptor = cipher.decryptor()
-    decrypted = decryptor.update(base64.b64decode(encrypted_value)) + decryptor.finalize()
-    unpadded_value = unpad(decrypted)
-    return unpadded_value.decode()
 
 
 # Define a function to process messages
