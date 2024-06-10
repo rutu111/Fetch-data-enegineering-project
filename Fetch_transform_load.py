@@ -39,7 +39,21 @@ def encrypt_value(value):
     return base64.b64encode(encrypted).decode()
 
 
+#functions for decryption 
+def unpad(data):
+    unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
+    unpadded_data = unpadder.update(data) + unpadder.finalize()
+    return unpadded_data
 
+def decrypt_value(encrypted_value):
+    backend = default_backend()
+    cipher = Cipher(algorithms.AES(AES_KEY), modes.ECB(), backend=backend)
+    decryptor = cipher.decryptor()
+    decrypted = decryptor.update(base64.b64decode(encrypted_value)) + decryptor.finalize()
+    unpadded_value = unpad(decrypted)
+    return unpadded_value.decode()
+
+    
 # Define a function to process messages
 def process_message(message,db_param):
     
