@@ -1,3 +1,5 @@
+""""IMPORTANT thing to note: During the setup, when I tried sqs receive-message on the terminal and through the code, I got errors. I have uploaded screenshots of those errors in this email. I tried multiple times, and it did not work. I do not think the error is on my end because I tried everything. However, the code was relatively easy so I went ahead and worked on it. The solution provided is the full implementation on how I would have done this assessment. I wasn't able to test the code due to the inability to receive messages from the queue due to the initial error, but the idea, logic and understanding has been thoroughly explained and provided in great depth. I'd love to explain my approach in greater depth in the interview - if shortlisted. """
+
 Steps to run:
 
 Pre-requisite:
