@@ -90,6 +90,10 @@ def process_message(message,db_param):
     col=str(tuple(tmp.keys())).replace("\'", "") #gettng all the columsns of the JSON object
     loading(masked_msg,col,db_param) #fucntion to load everything to postgres
 
+
+
+
+
 def loading(msg,col,db_params):
     
     """
