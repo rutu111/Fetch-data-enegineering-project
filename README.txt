@@ -79,22 +79,24 @@ The data insertion process involves forming a dynamic SQL INSERT statement using
 Where: The application can run on a server or cloud infrastructure with access to AWS services (for production use), or locally on a developer's machine ("Steps to run" section above outline how to run the application locally). The project includes configurations for running AWS services locally using tools like LocalStack. How: To run the application, follow these steps: Ensure you have Python and the required libraries installed. Set up a PostgreSQL database and create the user_logins table with the provided schema. Install and configure LocalStack if running services locally. Run the Python application, which processes messages from an SQS queue (AWS or local) and writes data to PostgreSQL. 
 
 ● How would you deploy this application in production?
-To deploy this application in production, a detailed and systematic approach is necessary to ensure scalability, reliability, and security. Firstly, containerization using Docker is crucial. Create Docker images for both the application and the database, and push these images to a container registry like Docker Hub or Amazon Elastic Container Registry (ECR). Utilize Docker Compose to define and run multi-container Docker applications, ensuring that all dependencies are included.
+Create Docker images for both the application and the database, and push these images to a container registry like Docker Hub. Utilize Docker Compose to define and run multi-container Docker applications, ensuring that all dependencies are included.
 
-Infrastructure as Code (IaC) tools such as Terraform or AWS CloudFormation will be used to provision and manage the infrastructure. This includes setting up services such as Amazon ECS (Elastic Container Service) or Kubernetes (EKS) for container orchestration, Amazon S3 for storage, Amazon RDS for a managed PostgreSQL database, and IAM roles for secure access management.
+Infrastructure as Code tools such as Terraform can be used to provision and manage the infrastructure. This includes setting up services such as Amazon ECS or Kubernetes for container orchestration, Amazon S3 for storage, Amazon RDS for a managed PostgreSQL database, and IAM roles for secure access management.
 
 The deployment process should leverage Kubernetes for orchestration, deploying the application on a Kubernetes cluster (e.g., Amazon EKS). Kubernetes provides capabilities for automatic deployment, scaling, and management of containerized applications.
 
-A robust CI/CD pipeline should be set up using tools like Jenkins, GitLab CI, or GitHub Actions to automate the build, test, and deployment processes. This pipeline will ensure that every code change is consistently tested and deployed. Security is a critical aspect, with secrets management handled by tools like AWS Secrets Manager or HashiCorp Vault. IAM roles and policies should be configured to grant least-privilege access, and SSL/TLS certificates should be used to encrypt communications.
+A robust CI/CD pipeline should be set up using tools like Jenkins to automate the build, test, and deployment processes. This pipeline will ensure that every code change is consistently tested and deployed. 
 
-Monitoring and logging are essential for maintaining application health. Use AWS CloudWatch for AWS service monitoring and Prometheus and Grafana for application-level metrics and alerting. The ELK (Elasticsearch, Logstash, and Kibana) stack can be deployed for centralized logging and monitoring, enabling efficient log analysis and troubleshooting.
+Security is a critical aspect. IAM roles and policies should be configured to grant least-privilege access, and SSL/TLS certificates should be used to encrypt communications.
 
-To ensure high availability and scalability, configure auto-scaling groups to adjust the number of running instances based on demand. Use an Elastic Load Balancer (ELB) to distribute incoming traffic across multiple instances. Backup and recovery strategies should include automated backups for the PostgreSQL database using AWS RDS and a disaster recovery plan with data replication and failover mechanisms.
+Monitoring and logging are essential for maintaining application health. Use AWS CloudWatch for AWS service monitoring and  Grafana for application-level metrics and alerting. The ELK (Elasticsearch, Logstash, and Kibana) stack can be deployed for centralized logging and monitoring, enabling efficient log analysis and troubleshooting.
+
+To ensure high availability and scalability, configure auto-scaling groups to adjust the number of running instances based on demand. Use an Elastic Load Balancer to distribute incoming traffic across multiple instances. Backup and recovery strategies should include automated backups for the PostgreSQL database using AWS RDS and a disaster recovery plan with data replication and failover mechanisms.
 
 ● What other components would you want to add to make this production ready?
 To make the application production-ready, consider adding:
 
-Logging: Implement centralized logging using tools like the ELK stack (eg: Elasticsearch)
+Logging: Implement centralized logging using tools like the ELK stack
 
 Monitoring: Use tools for monitoring application metrics and alerting. eg: Grafana
 
@@ -102,14 +104,14 @@ Error Handling: Implement robust error handling and retries for transient failur
 
 Security: Ensure data encryption both at rest and in transit, and implement proper IAM roles and policies. Note: the current AES encryption method suggested is not very secure and is easy for hackers to crack patterns. For better security, more sophisticated encryption method should be used. 
 
-Scalability: Use auto-scaling features of Kubernetes to handle increased load. uto-scaling will allow the application to handle varying loads by automatically adjusting the number of running instances. An Elastic Load Balancer (ELB) will distribute incoming traffic across multiple instances, ensuring high availability and reliability.
+Scalability: Use auto-scaling features of Kubernetes to handle increased load. Auto-scaling will allow the application to handle varying loads by automatically adjusting the number of running instances. An Elastic Load Balancer (ELB) will distribute incoming traffic across multiple instances, ensuring high availability and reliability.
 
 Implementing a backup and disaster recovery plan is critical. Regular automated backups of the PostgreSQL database using AWS RDS should be configured, along with a strategy for restoring data in case of failures. Data replication and failover mechanisms should be in place to minimize downtime during disasters.
 
 ● How can this application scale with a growing dataset.
 1. Horizontal Scaling: Deploy multiple instances of the application to distribute the load.
 2. Database Optimization: Implement database partitioning and indexing to manage large tables.
-3. Caching: Use caching mechanisms like Redis or Memcached to reduce database load.
+3. Caching: Use caching mechanisms like to reduce database load.
 4. Implement auto-scaling for the application's compute resources using AWS Auto Scaling groups, ensuring the infrastructure can handle peak loads and scale back during low demand. 
 
 ● How can PII be recovered later on?
@@ -117,10 +119,9 @@ For this, the decrypt_value() function has been provided. It can be used in the 
 
 ● What are the assumptions you made?
 1. The Localstack environment accurately simulates AWS services.
-2.The PII encryption key is securely managed and accessible only by authorized components.
-3.The structure of the incoming messages remains consistent and adheres to the expected format.
-4.The database schema is designed to handle the encrypted data without performance degradation.
-5.The incoming messages have no missing values.
+2.The structure of the incoming messages remains consistent and adheres to the expected format.
+3.The database schema is designed to handle the encrypted data without performance degradation.
+4.The incoming messages have no missing values.
 
 
 
