@@ -37,7 +37,7 @@ docker-compose down
 
 Answering questions in the assesement pdf
 
-●How will you read messages from the queue?
+● How will you read messages from the queue?
 To read messages from the queue, I will summarize the main() function from the provided code:
 
 1. Configuration Setup: I will first set up the necessary configurations by reading from a configuration file (cred.ini). This file contains my AWS credentials, SQS queue URL, and PostgreSQL database connection details.
@@ -94,9 +94,9 @@ To ensure high availability and scalability, configure auto-scaling groups to ad
 ● What other components would you want to add to make this production ready?
 To make the application production-ready, consider adding:
 
-Logging: Implement centralized logging using tools like the ELK stack (Elasticsearch, Logstash, Kibana).
+Logging: Implement centralized logging using tools like the ELK stack (eg: Elasticsearch)
 
-Monitoring: Use Prometheus and Grafana for monitoring application metrics and alerting.
+Monitoring: Use tools for monitoring application metrics and alerting. eg: Grafana
 
 Error Handling: Implement robust error handling and retries for transient failures.
 
@@ -113,7 +113,7 @@ Implementing a backup and disaster recovery plan is critical. Regular automated 
 4. Implement auto-scaling for the application's compute resources using AWS Auto Scaling groups, ensuring the infrastructure can handle peak loads and scale back during low demand. 
 
 ● How can PII be recovered later on?
-For this, the decrypt_value () function has been provided. It can be used in the same way as the encrypt_value() function and process_message() function is used - but just the other way round. 
+For this, the decrypt_value() function has been provided. It can be used in the same way as the encrypt_value() function and process_message() functions are used together - but just the other way round. 
 
 ● What are the assumptions you made?
 1. The Localstack environment accurately simulates AWS services.
