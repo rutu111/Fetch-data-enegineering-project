@@ -21,13 +21,13 @@ awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/logi
 test postgres connection
 psql -d postgres -U postgres -p 5432 -h localhost -W
 
-3. Make changes to cred.ini as per aws, localstack, postgres, hashing cred 
+3. Make changes to cred.ini as per aws, localstack, postgres credentials
 
 4. Once that is done, on a separate terminal, run the Fetch_transform_load.py file 
 What this file does is the following:
 1. Fetches a batch of messages/data from the SQS queue -> main()
 2. For each message in batch, masks each message's device_id and pi keys using cryptography. -> process_message()
-3. Pushes a batch of masked messages into POSGRES -> loading()
+3. Pushes a batch of masked messages into POSTGRES -> loading()
 All 3 functions in Fetch_transform_load.py processes batch of messages. 
 
 5. Shut down the docker container
