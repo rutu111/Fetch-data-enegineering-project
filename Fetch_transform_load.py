@@ -24,6 +24,7 @@ AES_KEY = AES_KEY.ljust(32, b'\0')[:32]
 # Generate a key for encryption and decryption
 # This key must be stored securely and used for both encryption and decryption
 
+#functions for encryption 
 def pad(data):
     padder = padding.PKCS7(algorithms.AES.block_size).padder()
     padded_data = padder.update(data) + padder.finalize()
@@ -63,8 +64,10 @@ def process_message(message,db_param):
     1. Can detect duplicates
     2. Can retrieve the original values
     
-    Hashing not used because hashing is a one way method. It can help detect duplicates
-    but we cannot convert back to the original calues 
+    Here, we loop through the batch of messages sent from Main()
+    For each message, we convert it to JSON object.
+    We mask the device_od and ip fields and then add the masked message to a list
+    Once the whole batch of messages is processed/masked, we send it to loading()
     """
 
 
@@ -81,26 +84,23 @@ def process_message(message,db_param):
             tmp['masked_ip'] = encrypt_value(tmp['ip'])
             tmp['masked_device_id'] = encrypt_value(tmp['device_id'])
   
-        # Removing the unmasked fields
-            
+            # Removing the unmasked fields
             del tmp["ip"]
             del tmp["device_id"]
             masked_msg.append(tuple(tmp.values())) #append to list
 
     col=str(tuple(tmp.keys())).replace("\'", "") #gettng all the columsns of the JSON object
-    loading(masked_msg,col,db_param) #fucntion to load everything to postgres
-
-
+    loading(masked_msg,col,db_param) #fucntion to load batch of messages to postgres
 
 
 
 def loading(msg,col,db_params):
     
     """
-    Function to push data to postgres using psycopg library
+    Function to push batch of messsages to postgres using psycopg library
     """
        
-        # Connect to the PostgreSQL database
+    # Connect to the PostgreSQL database
     try:
         connection = psycopg2.connect(**db_params)
         cursor = connection.cursor()
@@ -130,7 +130,7 @@ def loading(msg,col,db_params):
 def main():
     
     """
-    Main function that connect to sqs and call subroutine for 
+    Main function connects to sqs and call subroutine for 
     transforming, loading data into postgres and poll continuosly
     waiting for new message
     """
@@ -163,6 +163,7 @@ def main():
     while True:
         try:
             # Receive messages from the queue with long-polling (wait up to 20 seconds)
+            # Receive messages in batches
             response = sqs.receive_message(
                 QueueUrl=queue_url,
                 AttributeNames=['All'],
@@ -171,7 +172,7 @@ def main():
             )
 
             # Process received messages
-            if 'Messages' in response: #to make sure the responseis not empty
+            if 'Messages' in response: #to make sure the response not empty
                 delete_batch = []
                 message_body=[] #populate all messages into a list
 
@@ -180,8 +181,9 @@ def main():
                     #kessages to delete from the queue
                     delete_batch.append({'Id': message['MessageId'], 'ReceiptHandle': message['ReceiptHandle']})
 
-                #process the messages 
+                #process the messages. Send a batch of messages to process_message()
                 process_message(message_body,db_params)
+
                 # Delete the message from the queue
                 if delete_batch:
                     sqs.delete_message_batch(QueueUrl=queue_url, Entries=delete_batch)
