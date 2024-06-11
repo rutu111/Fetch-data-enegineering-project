@@ -94,7 +94,8 @@ Monitoring and logging are essential for maintaining application health. Use AWS
 To ensure high availability and scalability, configure auto-scaling groups to adjust the number of running instances based on demand. Use an Elastic Load Balancer to distribute incoming traffic across multiple instances. Backup and recovery strategies should include automated backups for the PostgreSQL database using AWS RDS and a disaster recovery plan with data replication and failover mechanisms.
 
 ● What other components would you want to add to make this production ready?
-To make the application production-ready, consider adding:
+
+Briefly reiterating key points in the previous answer:
 
 Logging: Implement centralized logging using tools like the ELK stack
 
